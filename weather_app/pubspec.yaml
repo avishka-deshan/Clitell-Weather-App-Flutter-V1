@@ -31,6 +31,12 @@ dependencies:
   http: ^0.13.3
   google_fonts: ^2.1.0
   flutter_svg: ^0.22.0-nullsafety.3
+  intl: 0.17.0-nullsafety.2
+  geolocator: ^7.3.0
+  latlng: any
+  geocoder: ^0.2.1
+  geocoding: ^2.0.0
+  location_permissions: ^4.0.0
 
 dev_dependencies:
   flutter_test:

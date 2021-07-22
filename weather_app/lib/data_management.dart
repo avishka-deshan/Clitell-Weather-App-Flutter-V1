@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:weather_app/weather_response.dart';
 
 class DataManagement {
-  Future<CityResponse> getWeather(String city) async {
+  Future<WeatherResponse> getWeather(String city) async {
     //api.openweathermap.org/data/2.5/weather?q={city name}&appid={API key}
 
     final queryParameters = {
@@ -20,6 +20,6 @@ class DataManagement {
     final response = await http.get(uri);
     print(response.body);
     final json = jsonDecode(response.body);
-    return CityResponse.fromJson(json);
+    return WeatherResponse.fromJson(json);
   }
 }

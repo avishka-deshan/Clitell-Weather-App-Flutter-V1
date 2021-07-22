@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:weather_app/screens/weather_page.dart';
-import 'package:weather_app/weather_response.dart';
-import '../data_management.dart';
 
 class WeatherWidget extends StatelessWidget {
   String cityName = "";
   int temperature = 0;
+  String updatedDate = '';
+  String sunriseTime = '';
+  String sunsetTime = '';
+  String dayTime = '';
 
-  WeatherWidget(String cityName, int temp) {
+  WeatherWidget(String cityName, int temp, String date, String sunrise, String sunset, String day) {
     this.cityName = cityName;
     this.temperature = temp;
+    this.updatedDate = date;
+    this.sunriseTime = sunrise;
+    this.sunsetTime = sunset;
+    this.dayTime = day;
   }
 
   @override
@@ -39,7 +44,7 @@ class WeatherWidget extends StatelessWidget {
                         color: Colors.white,
                       ),
                     ),
-                    Text("1.46 PM - Thu 22 Jul 2021",
+                    Text(updatedDate,
                         style: GoogleFonts.lato(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -48,7 +53,7 @@ class WeatherWidget extends StatelessWidget {
                   ],
                 ),
                 SizedBox(
-                  height: 120,
+                  height: 80,
                 ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -66,14 +71,14 @@ class WeatherWidget extends StatelessWidget {
                       children: [
                         Image.asset(
                           "assets/images/moon.png",
-                          width: 34,
-                          height: 34,
+                          width: 30,
+                          height: 30,
                           color: Colors.white,
                         ),
                         SizedBox(
-                          width: 20,
+                          width: 10,
                         ),
-                        Text("Night",
+                        Text(dayTime,
                             style: GoogleFonts.lato(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
@@ -81,6 +86,39 @@ class WeatherWidget extends StatelessWidget {
                             )),
                       ],
                     ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            "assets/images/sun.png",
+                            width: 30,
+                            height: 30,
+                            color: Colors.white,
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Text("Rise: "+sunriseTime,
+                              style: GoogleFonts.lato(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              )),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Text("Set: "+sunsetTime,
+                              style: GoogleFonts.lato(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              )),
+                        ],
+                      ),
+                    )
+
                   ],
                 )
               ],
