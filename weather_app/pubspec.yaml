@@ -37,6 +37,8 @@ dependencies:
   geocoder: ^0.2.1
   geocoding: ^2.0.0
   location_permissions: ^4.0.0
+  flutter_image_compress: ^1.0.0-nullsafety
+  permission_handler: ^8.1.4
 
 dev_dependencies:
   flutter_test:
