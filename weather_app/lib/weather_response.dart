@@ -49,7 +49,7 @@ class WeatherResponse {
 
     DateTime upTime = new DateFormat("HH:mm").parse(updatedTime);
     DateTime riseTime = new DateFormat("HH:mm").parse(sunriseTime);
-    DateTime setTime = new DateFormat("HH:mm").parse(sunsetTime);
+    DateTime setTime = new DateFormat("HH:mm").parse("20:00");
     DateTime noonTime = new DateFormat("HH:mm").parse("12:00");
     DateTime eveningTime = new DateFormat("HH:mm").parse("17:00");
 

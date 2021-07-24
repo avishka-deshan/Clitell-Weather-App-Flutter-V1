@@ -1,10 +1,10 @@
 
 import 'dart:async';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:location_permissions/location_permissions.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:weather_app/data_management.dart';
 import 'package:weather_app/weather_response.dart';
 import 'package:weather_app/widgets/weather_widget.dart';
@@ -46,10 +46,10 @@ class _WeatherPageState extends State<WeatherPage> {
 
 
   @override
-  void initState() {
+  void initState(){
     // TODO: implement initState
-    super.initState();
     search(searchText);
+    _locationPermission();
     widget.stream.listen((index) {
       if (index == 0) {
         try {
@@ -59,12 +59,7 @@ class _WeatherPageState extends State<WeatherPage> {
         }
       }
     });
-    try{
-      getUserLocation(searchText);
-    }catch(e){
-      getLastKnownPosition();
-    }
-
+    super.initState();
   }
 
   @override
@@ -134,19 +129,14 @@ class _WeatherPageState extends State<WeatherPage> {
     );
   }
 
-  getUserLocation(String location) async {//call this async method from whereever you need
-
+  Future<Position> _locationPermission() async {
     bool serviceEnabled;
     LocationPermission permission;
-
 
     // Test if location services are enabled.
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      permission = await Geolocator.requestPermission();
-      // Location services are not enabled don't continue
-      // accessing the position and request users of the
-      // App to enable the location services.
+      await Permission.location.request();
       return Future.error('Location services are disabled.');
     }
 
@@ -154,39 +144,50 @@ class _WeatherPageState extends State<WeatherPage> {
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
-        // Permissions are denied, next time you could try
-        // requesting permissions again (this is also where
-        // Android's shouldShowRequestPermissionRationale
-        // returned true. According to Android guidelines
-        // your App should show an explanatory UI now.
+        await Permission.location.request();
         return Future.error('Location permissions are denied');
       }
     }
 
     if (permission == LocationPermission.deniedForever) {
       // Permissions are denied forever, handle appropriately.
+      await Permission.location.request();
       return Future.error(
           'Location permissions are permanently denied, we cannot request permissions.');
     }
 
-    Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
-    print(position);
-    try {
-      List<Placemark> placemarks = await placemarkFromCoordinates(
-        position.latitude,
-        position.longitude,
-      );
-      String? location = placemarks[0].subAdministrativeArea;
-      searchText = location!;
-      search(searchText);
-      print(serviceEnabled);
-    }catch(err){
-      print("err");
+    try{
+      getUserLocation(searchText);
+    }catch(e){
+      getLastKnownPosition();
     }
+
+    // When we reach here, permissions are granted and we can
+    // continue accessing the position of the device.
+    return await Geolocator.getCurrentPosition();
+  }
+
+
+  getUserLocation(String location) async {
+
+      Position position = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high);
+      print(position);
+      try {
+        List<Placemark> placemarks = await placemarkFromCoordinates(
+          position.latitude,
+          position.longitude,
+        );
+        String? location = placemarks[0].subAdministrativeArea;
+        searchText = location!;
+        search(searchText);
+      }catch(err){
+        print("err");
+      }
     return true;
 
   }
+
 
   void getLastKnownPosition() async{
 
